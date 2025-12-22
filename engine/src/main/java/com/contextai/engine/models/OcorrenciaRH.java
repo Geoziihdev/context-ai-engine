@@ -1,14 +1,20 @@
 package com.contextai.engine.models;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@DiscriminatorValue("OcorrenciaRH") 
 @Getter @Setter
 public class OcorrenciaRH extends Ocorrencia { 
     
+    @Column(name = "cpf_colaborador") 
     private String cpfColaborador;
+    
+    @Column(name = "categoria_solicitacao") 
     private String categoriaSolicitacao; 
 
     @Override
@@ -19,7 +25,7 @@ public class OcorrenciaRH extends Ocorrencia {
         return "Solicitação de RH recebida para o colaborador: " + cpfColaborador;
     }
 
-    public String getPrioridadeDefinida() {
+    public String getPrioridadeCalculada() {
         int pesoSetor = (getSetor() != null) ? getSetor().getPesoEstrategico() : 1;
         
         int multiplicador = 1;

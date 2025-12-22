@@ -6,6 +6,7 @@ import com.contextai.engine.repositories.OcorrenciaRepository;
 import com.contextai.engine.repositories.SetorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional; 
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,21 @@ public class TriagemService {
     @Autowired
     private SetorRepository setorRepository; 
 
+    @Transactional 
     public Ocorrencia salvar(Ocorrencia o) {
+        if (o.getSetor() != null) {
+            String nomeSetor = o.getSetor().getNome();
+            
+            Optional<Setor> setorExistente = setorRepository.findFirstByNomeIgnoreCase(nomeSetor);
+            
+            if (setorExistente.isPresent()) {
+                o.setSetor(setorExistente.get());
+            } else {
+                Setor setorSalvo = setorRepository.save(o.getSetor());
+                o.setSetor(setorSalvo);
+            }
+        }
+
         System.out.println("Cálculo de Urgência: " + o.calcularNivelUrgencia()); 
         return repository.save(o);
     }
