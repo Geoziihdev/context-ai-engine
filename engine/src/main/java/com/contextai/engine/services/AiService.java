@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 @Service
 public class AiService {
@@ -37,9 +37,13 @@ public class AiService {
 
         try {
             ResponseEntity<Map> response = restTemplate.postForEntity(URL, entity, Map.class);
-            return response.getBody().toString(); 
+            
+            List<Map> choices = (List<Map>) response.getBody().get("choices");
+            Map message = (Map) choices.get(0).get("message");
+            return message.get("content").toString().trim(); 
+            
         } catch (Exception e) {
-            return "Erro ao processar IA: " + e.getMessage();
+            return "NAO_CLASSIFICADO"; 
         }
     }
 }

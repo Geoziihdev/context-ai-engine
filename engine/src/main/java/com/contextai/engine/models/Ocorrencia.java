@@ -11,9 +11,11 @@ public abstract class Ocorrencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private String relato;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "setor_id")
     private Setor setor;
 
     public abstract String calcularNivelUrgencia();

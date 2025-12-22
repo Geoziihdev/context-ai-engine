@@ -12,5 +12,6 @@ public class Setor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    @Column(name = "peso_estratégico")
     private Integer pesoEstrategico;
 }

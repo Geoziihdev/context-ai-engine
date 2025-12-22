@@ -19,3 +19,4 @@ public class OcorrenciaTecnica extends Ocorrencia {
         return "Análise Técnica agendada para: " + equipamento;
     }
 }
+
