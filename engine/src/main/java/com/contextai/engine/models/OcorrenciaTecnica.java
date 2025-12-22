@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class OcorrenciaTecnica extends Ocorrencia { // Aqui acontece a HERANÇA
+public class OcorrenciaTecnica extends Ocorrencia { 
     
     private String equipamento;
     private boolean sistemaForaDoAr;
