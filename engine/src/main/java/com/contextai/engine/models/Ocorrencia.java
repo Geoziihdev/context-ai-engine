@@ -12,6 +12,7 @@ public abstract class Ocorrencia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(name = "relato_usuario")
     private String relato;
     
     @ManyToOne(cascade = CascadeType.ALL)
