@@ -1,8 +1,6 @@
 package com.contextai.engine.controllers;
 
-import com.contextai.engine.models.Ocorrencia;
-import com.contextai.engine.models.OcorrenciaTecnica;
-import com.contextai.engine.models.Setor; 
+import com.contextai.engine.models.*;
 import com.contextai.engine.services.TriagemService;
 import com.contextai.engine.services.AiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,25 +17,24 @@ public class OcorrenciaController {
     private TriagemService service;
 
     @Autowired
-    private AiService aiService; 
+    private AiService aiService;
 
     @PostMapping("/tecnica")
-    public OcorrenciaTecnica criar(@RequestBody OcorrenciaTecnica ot) { 
-        
-        String nomeSetorIA = aiService.analisarRelato(ot.getRelato());
-        
-        Setor setorExistente = service.buscarSetorPorNome(nomeSetorIA);
-
-        if (setorExistente != null) {
-            ot.setSetor(setorExistente);
-        } else {
-            Setor setorNovo = new Setor();
-            setorNovo.setNome(nomeSetorIA);
-            setorNovo.setPesoEstrategico(1); 
-            ot.setSetor(setorNovo);
-        }
-
+    public OcorrenciaTecnica criarTecnica(@RequestBody OcorrenciaTecnica ot) {
+        vincularSetorIA(ot);
         return (OcorrenciaTecnica) service.salvar(ot);
+    }
+
+    @PostMapping("/financeira")
+    public OcorrenciaFinanceira criarFinanceira(@RequestBody OcorrenciaFinanceira of) {
+        vincularSetorIA(of);
+        return (OcorrenciaFinanceira) service.salvar(of);
+    }
+
+    @PostMapping("/rh")
+    public OcorrenciaRH criarRH(@RequestBody OcorrenciaRH orh) {
+        vincularSetorIA(orh);
+        return (OcorrenciaRH) service.salvar(orh);
     }
 
     @GetMapping
@@ -50,5 +47,19 @@ public class OcorrenciaController {
         return service.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    private void vincularSetorIA(Ocorrencia o) {
+        String nomeSetorIA = aiService.analisarRelato(o.getRelato());
+        Setor setorExistente = service.buscarSetorPorNome(nomeSetorIA);
+
+        if (setorExistente != null) {
+            o.setSetor(setorExistente);
+        } else {
+            Setor setorNovo = new Setor();
+            setorNovo.setNome(nomeSetorIA);
+            setorNovo.setPesoEstrategico(1); 
+            o.setSetor(setorNovo);
+        }
     }
 }

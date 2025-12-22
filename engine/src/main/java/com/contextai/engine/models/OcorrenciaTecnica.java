@@ -18,5 +18,15 @@ public class OcorrenciaTecnica extends Ocorrencia {
         }
         return "Análise Técnica agendada para: " + equipamento;
     }
-}
 
+    public String getPrioridadeDefinida() {
+        int peso = (getSetor() != null) ? getSetor().getPesoEstrategico() : 1;
+        
+        int score = sistemaForaDoAr ? (peso * 2) : peso;
+
+        if (score >= 15) return "CRÍTICA (Score " + score + ")"; 
+        if (score >= 10) return "ALTA (Score " + score + ")";    
+        if (score >= 5)  return "MÉDIA (Score " + score + ")";   
+        return "BAIXA (Score " + score + ")";
+    }
+}
