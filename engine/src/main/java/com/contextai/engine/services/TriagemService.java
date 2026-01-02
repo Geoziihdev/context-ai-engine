@@ -6,11 +6,10 @@ import com.contextai.engine.repositories.OcorrenciaRepository;
 import com.contextai.engine.repositories.SetorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; 
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
 @Service
 public class TriagemService {
 
@@ -18,37 +17,36 @@ public class TriagemService {
     private OcorrenciaRepository repository;
 
     @Autowired
-    private SetorRepository setorRepository; 
+    private SetorRepository setorRepository;
 
-    @Transactional 
+    @Transactional
     public Ocorrencia salvar(Ocorrencia o) {
         if (o.getSetor() != null) {
             String nomeSetor = o.getSetor().getNome();
-            
-            Optional<Setor> setorExistente = setorRepository.findFirstByNomeIgnoreCase(nomeSetor);
-            
-            if (setorExistente.isPresent()) {
-                o.setSetor(setorExistente.get());
-            } else {
-                Setor setorSalvo = setorRepository.save(o.getSetor());
-                o.setSetor(setorSalvo);
-            }
+            Setor setor = setorRepository.findFirstByNomeIgnoreCase(nomeSetor)
+                    .orElseGet(() -> {
+                        Setor novoSetor = o.getSetor();
+                        return setorRepository.save(novoSetor);
+                    });
+            o.setSetor(setor);
         }
 
-        System.out.println("Cálculo de Urgência: " + o.calcularNivelUrgencia()); 
-        return repository.save(o);
+        String urgenciaIA = o.calcularNivelUrgencia();
+        o.setPrioridadeDefinida(urgenciaIA);
+
+        return repository.saveAndFlush(o);
     }
 
     public Setor buscarSetorPorNome(String nome) {
         return setorRepository.findFirstByNomeIgnoreCase(nome)
-                              .orElse(null);
-    }
-
-    public List<Ocorrencia> listarTodas() {
-        return repository.findAll();
+                               .orElse(null);
     }
 
     public Optional<Ocorrencia> buscarPorId(Long id) {
         return repository.findById(id);
+    }
+
+    public List<Ocorrencia> listarTodas() {
+        return repository.findAll();
     }
 }

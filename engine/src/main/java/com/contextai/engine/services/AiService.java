@@ -26,23 +26,35 @@ public class AiService {
         Map<String, Object> body = new HashMap<>();
         body.put("model", "llama-3.3-70b-versatile"); 
         
-        String prompt = "Classifique o seguinte relato como 'TECNICO' ou 'FINANCEIRO' " +
-                        "e responda apenas a palavra: " + relato;
+        String systemInstruction = "Você é um classificador de tickets. " +
+                                  "Responda APENAS com uma das três palavras: 'TECNICO', 'FINANCEIRO' ou 'RH'. " +
+                                  "Não use pontuação, não dê explicações.";
+        
+        String userPrompt = "Classifique este relato: " + relato;
 
         body.put("messages", new Object[]{
-            Map.of("role", "user", "content", prompt)
+            Map.of("role", "system", "content", systemInstruction),
+            Map.of("role", "user", "content", userPrompt)
         });
+
+        body.put("temperature", 0.1);
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
         try {
             ResponseEntity<Map> response = restTemplate.postForEntity(URL, entity, Map.class);
             
-            List<Map> choices = (List<Map>) response.getBody().get("choices");
-            Map message = (Map) choices.get(0).get("message");
-            return message.get("content").toString().trim(); 
+            if (response.getBody() != null) {
+                List<Map> choices = (List<Map>) response.getBody().get("choices");
+                Map message = (Map) choices.get(0).get("message");
+                String resultado = message.get("content").toString().toUpperCase().trim();
+                
+                return resultado.replaceAll("[^A-Z]", ""); 
+            }
+            return "NAO_CLASSIFICADO";
             
         } catch (Exception e) {
+            System.err.println("Erro ao chamar Groq API: " + e.getMessage());
             return "NAO_CLASSIFICADO"; 
         }
     }

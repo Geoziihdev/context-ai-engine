@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional; 
 
 @RestController
 @RequestMapping("/api/ocorrencias")
@@ -20,21 +21,21 @@ public class OcorrenciaController {
     private AiService aiService;
 
     @PostMapping("/tecnica")
-    public OcorrenciaTecnica criarTecnica(@RequestBody OcorrenciaTecnica ot) {
+    public Ocorrencia criarTecnica(@RequestBody OcorrenciaTecnica ot) {
         vincularSetorIA(ot);
-        return (OcorrenciaTecnica) service.salvar(ot);
+        return service.salvar(ot);
     }
 
     @PostMapping("/financeira")
-    public OcorrenciaFinanceira criarFinanceira(@RequestBody OcorrenciaFinanceira of) {
+    public Ocorrencia criarFinanceira(@RequestBody OcorrenciaFinanceira of) {
         vincularSetorIA(of);
-        return (OcorrenciaFinanceira) service.salvar(of);
+        return service.salvar(of);
     }
 
     @PostMapping("/rh")
-    public OcorrenciaRH criarRH(@RequestBody OcorrenciaRH orh) {
+    public Ocorrencia criarRH(@RequestBody OcorrenciaRH orh) {
         vincularSetorIA(orh);
-        return (OcorrenciaRH) service.salvar(orh);
+        return service.salvar(orh);
     }
 
     @GetMapping
