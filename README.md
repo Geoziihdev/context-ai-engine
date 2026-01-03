@@ -32,6 +32,44 @@ O sistema utiliza uma estrutura de classes especializada:
 
 ---
 
+## Resultados e Persistência
+O projeto utiliza a estratégia de Herança (Single Table) do JPA, permitindo que diferentes tipos de ocorrências sejam armazenados na mesma tabela, mantendo a integridade e facilitando consultas complexas.
+
+1. **Persistência no PostgreSQL**
+Através do console do banco de dados, podemos ver como a IA classifica e rotula cada entrada automaticamente:
+
+
+```bash
+SELECT id, dtype, relato, prioridade_definida FROM ocorrencia;
+```
+
+<img width="1402" height="960" alt="Captura de tela 2026-01-03 203929" src="https://github.com/user-attachments/assets/5fe3bdee-96fa-488c-a496-5eb085239f6f" />
+
+
+2. **Consumo da API (GET)**
+Endpoint REST que retorna todos os objetos polimórficos processados:
+
+
+```bash
+GET /api/ocorrencias
+```
+
+
+<img width="1100" height="836" alt="Captura de tela 2026-01-03 200741" src="https://github.com/user-attachments/assets/a4f49ac3-85fa-4271-a701-69f2078559e7" />
+
+
+
+3. **Arquitetura de Classes**
+Abaixo, a implementação da classe base que utiliza polimorfismo para o cálculo de urgência:
+
+
+<img width="1844" height="925" alt="Captura de tela 2026-01-03 203032" src="https://github.com/user-attachments/assets/2dcf3aa6-c9d6-4a69-a354-b384c9d65974" />
+
+
+---
+
+
+
 ## Como Executar o Projeto
 
 1. **Clone o repositório:**
