@@ -63,7 +63,8 @@ GET /api/ocorrencias
 Abaixo, a implementação da classe base que utiliza polimorfismo para o cálculo de urgência:
 
 
-<img width="1844" height="925" alt="Captura de tela 2026-01-03 203032" src="https://github.com/user-attachments/assets/2dcf3aa6-c9d6-4a69-a354-b384c9d65974" />
+<img width="1388" height="945" alt="Captura de tela 2026-01-03 211026" src="https://github.com/user-attachments/assets/ccd2ef03-d372-47f8-8d57-e91c5a885b93" />
+
 
 
 ---
